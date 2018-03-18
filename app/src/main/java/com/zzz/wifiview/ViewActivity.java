@@ -3,16 +3,11 @@ package com.zzz.wifiview;
 import android.app.*;
 import android.content.*;
 import android.os.*;
-import android.text.*;
 import android.view.*;
-import android.view.inputmethod.*;
 import android.widget.*;
-import android.widget.AbsListView.*;
-import android.widget.SearchView.*;
 import java.io.*;
 import java.util.*;
 
-import android.content.ClipboardManager;
 import java.lang.Process;
 
 public class ViewActivity extends Activity {
@@ -21,7 +16,6 @@ public class ViewActivity extends Activity {
 	Context context = this;
 	String backupPath;
 	String sPath;
-	SearchView mSearchView = null;
 	 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +57,7 @@ public class ViewActivity extends Activity {
 	}
 	
 	private void doWork() {
-		final ListView lv = (ListView) findViewById(R.id.lv);
+		ListView lv = (ListView) findViewById(R.id.lv);
 		lv.setAdapter(new WiFiAdapter(this, mainList));
 		lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 				@Override
@@ -135,53 +129,6 @@ public class ViewActivity extends Activity {
 				}
 			});
 			
-		lv.setTextFilterEnabled(true);
-		
-		lv.setOnScrollListener(new OnScrollListener() {
-				@Override
-				public void onScrollStateChanged(AbsListView view, int scrollState) {
-					InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-					if (imm != null) {
-						imm.hideSoftInputFromWindow(lv.getWindowToken(), 0); // 输入法如果是显示状态，那么就隐藏输入法
-					}
-				}
-
-				@Override
-				public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-
-				}
-			});
-
-		mSearchView = (SearchView) findViewById(R.id.menu_search);
-		mSearchView.setIconifiedByDefault(true);
-		mSearchView.setSubmitButtonEnabled(true);
-		mSearchView.onActionViewExpanded();
-		//mSearchView.setBackgroundColor(0xff000000);
-		mSearchView.setIconifiedByDefault(true);
-		mSearchView.setOnQueryTextListener(new OnQueryTextListener() {
-				@Override
-				public boolean onQueryTextChange(String queryText) {
-					if (TextUtils.isEmpty(queryText)) {
-						lv.clearTextFilter();
-					}else {
-						lv.setFilterText(queryText);
-					}
-					return true;
-				}
-
-				@Override
-				public boolean onQueryTextSubmit(String queryText) {
-					if (mSearchView != null) {
-						InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-						if (imm != null) {
-							imm.hideSoftInputFromWindow(mSearchView.getWindowToken(), 0); // 输入法如果是显示状态，那么就隐藏输入法
-						}
-						mSearchView.clearFocus();
-					}
-					return true;
-				}
-			});
-			
 	}
 
 	private void delete(String ss) throws IOException {
@@ -215,45 +162,16 @@ public class ViewActivity extends Activity {
             }
         }
     }
-
-
-	@Override
-	protected void onNewIntent(Intent intent) {
-		setIntent(intent);
-		handleIntent(intent);
-	}
-
-	private void handleIntent(Intent intent) {
-		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-			String query = intent.getStringExtra(SearchManager.QUERY);
-			doMySearch(query);
-		}
-	}
-
-	private void doMySearch(String query) {
-		// TODO 自动生成的方法存根
-		Toast.makeText(this, "do search " + query, 0).show();
-	}
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.view, menu);
-
-		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-		SearchView searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
-		SearchableInfo info = searchManager.getSearchableInfo(getComponentName());
-		searchView.setSearchableInfo(info);
-		searchView.setIconifiedByDefault(false);
-		
-		/*super.onCreateOptionsMenu(menu);
+		super.onCreateOptionsMenu(menu);
 		menu.add(0,0,0,"刷新");
 		menu.add(0,1,0,"打开WiFi设置");
 		menu.add(0,2,0,"备份与恢复");
 		menu.add(0,3,0,"获取列表出错");
 		menu.getItem(3).setEnabled(false);
 		if(mainList != null) menu.getItem(3).setTitle("共 " + mainList.size() + " 条WiFi");
-		*/
-		
 		return true;
 	}
 
