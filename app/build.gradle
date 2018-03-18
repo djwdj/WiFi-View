@@ -6,19 +6,8 @@ android {
     defaultConfig {
         applicationId "com.zzz.wifiview"
         minSdkVersion 14
-        targetSdkVersion 25
-        versionCode 26
-        versionName '4.0'
+        targetSdkVersion 27
+        versionCode 35
+        versionName '8.0'
     }
-    dexOptions {
-        incremental false
-    }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_7
-        targetCompatibility JavaVersion.VERSION_1_7
-    }
-}
-
-dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
 }
